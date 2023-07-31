@@ -94,38 +94,7 @@ process REPORTS {
     path samplesheet_csv
 
     output:
-    tuple path(bin_depths_summary_tsv),
-        path(bin_summary_tsv),
-        path(CAPES_S7_log),
-        path(execution_trace_txt),
-        path(kraken2_report_txt),
-        path(pipeline_dag_svg),
-        path(binDepths_png),
-        path(krona_html),
-        path(transposed_tex),
-        path(transposed_tsv),
-        path(transposed_txt),
-        path(genome_fasta),
-        path(all_sites_fas),
-        path(baits_bed),
-        path(genome_dict),
-        path(genome_fasta_fai),
-        path(genome_gff3),
-        path(genome_gtf),
-        path(genome_sizes),
-        path(proteome_fasta),
-        path(test_baserecalibrator_table),
-        path(test_bed),
-        path(test_bedgraph),
-        path(test_bigwig),
-        path(test_paired_end_bam),
-        path(test_single_end_bam_readlist_txt),
-        path(test_vcf),
-        path(test_vcf_gz_tbi),
-        path(test2_targets_tsv_gz),
-        path(transcriptome_paf),
-        path(report_pdf),
-        path(samplesheet_csv) into publish_ch
+    path("*") into publish_ch
 
     script:
     """
@@ -137,10 +106,46 @@ process REPORTS {
 }
 
 workflow {
-    main:
-    MULTIQC(multiqc_html_ch, steps_ch)
-    REPORTS(reports.collect(),
-        bin_depths_summary_tsv_ch, bin_summary_tsv_ch, CAPES_S7_log_ch, execution_trace_txt_ch, kraken2_report_txt_ch,
-        pipeline_dag_svg_ch, binDepths_png_ch, krona_html_ch, transposed_tex_ch, transposed_tsv_ch, transposed_txt_ch,
-        genome_fasta_ch, all_sites_fas_ch, baits_bed_ch, genome_dict_ch, genome_fasta_fai_ch, genome_gff3_ch,
-        genome_gtf_ch, genome_sizes_ch, proteome_fasta_ch, test_baserecalibrator_table_ch
+    steps_ch
+        .combine(multiqc_html_ch)
+        .set { multiqc_inputs }
+
+    MULTIQC(multiqc_inputs)
+
+    multiqc_html_ch
+        .combine(bin_depths_summary_tsv_ch)
+        .combine(bin_summary_tsv_ch)
+        .combine(CAPES_S7_log_ch)
+        .combine(execution_trace_txt_ch)
+        .combine(kraken2_report_txt_ch)
+        .combine(pipeline_dag_svg_ch)
+        .combine(binDepths_png_ch)
+        .combine(krona_html_ch)
+        .combine(transposed_tex_ch)
+        .combine(transposed_tsv_ch)
+        .combine(transposed_txt_ch)
+        .combine(genome_fasta_ch)
+        .combine(all_sites_fas_ch)
+        .combine(baits_bed_ch)
+        .combine(genome_dict_ch)
+        .combine(genome_fasta_fai_ch)
+        .combine(genome_gff3_ch)
+        .combine(genome_gtf_ch)
+        .combine(genome_sizes_ch)
+        .combine(proteome_fasta_ch)
+        .combine(test_baserecalibrator_table_ch)
+        .combine(test_bed_ch)
+        .combine(test_bedgraph_ch)
+        .combine(test_bigwig_ch)
+        .combine(test_paired_end_bam_ch)
+        .combine(test_single_end_bam_readlist_txt_ch)
+        .combine(test_vcf_ch)
+        .combine(test_vcf_gz_tbi_ch)
+        .combine(test2_targets_tsv_gz_ch)
+        .combine(transcriptome_paf_ch)
+        .combine(report_pdf_ch)
+        .combine(samplesheet_csv_ch)
+        .set { reports_inputs }
+
+    REPORTS(reports_inputs)
+}
