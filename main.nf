@@ -101,3 +101,9 @@ process REPORTS {
     """
 
 }
+
+workflow {
+    main:
+    MULTIQC()
+    REPORTS()
+}
