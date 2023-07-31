@@ -45,7 +45,7 @@ process MULTIQC {
     val step
 
     output:
-    path("step_*/*.html") into reports
+    path("step_*/*.html"), emit: reports
 
     script:
     """
@@ -94,7 +94,7 @@ process REPORTS {
     path samplesheet_csv
 
     output:
-    path("*") into publish_ch
+    path("*"), emit: publish_ch
 
     script:
     """
