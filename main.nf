@@ -27,15 +27,6 @@ process MULTIQC {
     """
 }
 
-workflow REPORTS {
-
-    main:
-    MULTIQC()
-
-    emit:
-    val reports from reports.collect()
-}
-
 workflow {
     path bin_depths_summary_tsv from Channel.of("${projectDir}/resources/bin_depths_summary.tsv")
     path bin_summary_tsv from Channel.of("${projectDir}/resources/bin_summary.tsv")
@@ -70,5 +61,84 @@ workflow {
     path report_pdf from Channel.of("${projectDir}/resources/report.pdf")
     path samplesheet_csv from Channel.of("${projectDir}/resources/nfcore_chipseq110_samplesheet_test_full_6cols.csv")
 
-    REPORTS()
+    tuple(
+        path bin_depths_summary_tsv,
+        path bin_summary_tsv,
+        path CAPES_S7_log,
+        path execution_trace_txt,
+        path kraken2_report_txt,
+        path pipeline_dag_svg,
+        path binDepths_png,
+        path krona_html,
+        path transposed_tex,
+        path transposed_tsv,
+        path transposed_txt,
+        path genome_fasta,
+        path all_sites_fas,
+        path baits_bed,
+        path genome_dict,
+        path genome_fasta_fai,
+        path genome_gff3,
+        path genome_gtf,
+        path genome_sizes,
+        path proteome_fasta,
+        path test_baserecalibrator_table,
+        path test_bed,
+        path test_bedgraph,
+        path test_bigwig,
+        path test_paired_end_bam,
+        path test_single_end_bam_readlist_txt,
+        path test_vcf,
+        path test_vcf_gz_tbi,
+        path test2_targets_tsv_gz,
+        path transcriptome_paf,
+        path report_pdf,
+        path samplesheet_csv
+    ).set { all_resources_ch }
+
+    REPORTS(reports.collect(), all_resources_ch)
+}
+
+workflow REPORTS {
+    take:
+    val multiqc_reports
+    tuple path bin_depths_summary_tsv,
+        path bin_summary_tsv,
+        path CAPES_S7_log,
+        path execution_trace_txt,
+        path kraken2_report_txt,
+        path pipeline_dag_svg,
+        path binDepths_png,
+        path krona_html,
+        path transposed_tex,
+        path transposed_tsv,
+        path transposed_txt,
+        path genome_fasta,
+        path all_sites_fas,
+        path baits_bed,
+        path genome_dict,
+        path genome_fasta_fai,
+        path genome_gff3,
+        path genome_gtf,
+        path genome_sizes,
+        path proteome_fasta,
+        path test_baserecalibrator_table,
+        path test_bed,
+        path test_bedgraph,
+        path test_bigwig,
+        path test_paired_end_bam,
+        path test_single_end_bam_readlist_txt,
+        path test_vcf,
+        path test_vcf_gz_tbi,
+        path test2_targets_tsv_gz,
+        path transcriptome_paf,
+        path report_pdf,
+        path samplesheet_csv
+
+    main:
+    """
+    echo "Sleeping ${params.delay} seconds"
+    sleep ${params.delay}
+    echo "Copying all resource files to results directory for testing!"
+    """
 }
