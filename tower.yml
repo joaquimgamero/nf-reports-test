@@ -1,0 +1,73 @@
+reports:
+
+   MultiQC Report.html:
+      display: "MultiQC Report"
+
+   report.pdf:
+      display: "Pdf report"
+
+   SPAdesHybrid-CAPES_S7-binDepths.heatmap.png:
+      display: "SPAdesHybrid-CAPES_S7-binDepths.heatmap.png"
+
+   taxonomy.krona.html:
+      display: "Taxonomy"
+
+   nfcore_chipseq110_samplesheet_test_full_6cols.csv:
+      display: "nfcore_chipseq110_samplesheet_test_full_6cols"
+
+   all_sites.fas:
+      display: "FAS file"
+
+   baits.bed:
+      display: "BED file"
+
+   bin_depths_summary.tsv:
+      display: "TSV file"
+
+   CAPES_S7.log:
+      display: "Log file"
+
+   execution_trace_2021-07-29_07-12-59.txt:
+      display: "TXT file"
+
+   genome.dict:
+      display: "DICT file"
+
+   genome.fasta:
+      display: "FASTA file"
+
+   genome.fasta.fai:
+      display: "FASTA Index"
+
+   genome.gff3:
+      display: "GFF3 file"
+
+   genome.gtf:
+      display: "GTF file"
+
+   pipeline_dag_2021-07-29_07-12-59.svg:
+      display: "SVG file"
+
+   test.bedgraph:
+      display: "BED Graph file"
+
+   test.bigwig:
+      display: "BIGWIG file"
+
+   test.paired_end.bam:
+      display: "BAM file"
+
+   test.vcf:
+      display: "VCF file"
+
+   test.vcf.gz.tbi:
+      display: "VCF Index"
+
+   test2.targets.tsv.gz:
+      display: "TSV.GZ file"
+
+   transcriptome.paf:
+      display: "PAF file"
+
+   transposed_report.tex:
+      display: "TEX file"
