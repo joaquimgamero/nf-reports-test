@@ -135,7 +135,7 @@ workflow REPORTS {
         path report_pdf,
         path samplesheet_csv
 
-    main:
+    script:
     """
     echo "Sleeping ${params.delay} seconds"
     sleep ${params.delay}
