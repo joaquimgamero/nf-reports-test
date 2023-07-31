@@ -59,7 +59,6 @@ process REPORTS {
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
-    val multiqc_reports
     path bin_depths_summary_tsv
     path bin_summary_tsv
     path CAPES_S7_log
@@ -102,7 +101,6 @@ process REPORTS {
     sleep ${params.delay}
     echo "Copying all resource files to results directory for testing!"
     """
-
 }
 
 workflow {
@@ -112,8 +110,7 @@ workflow {
 
     MULTIQC(multiqc_inputs)
 
-    multiqc_html_ch
-        .combine(bin_depths_summary_tsv_ch)
+    bin_depths_summary_tsv_ch
         .combine(bin_summary_tsv_ch)
         .combine(CAPES_S7_log_ch)
         .combine(execution_trace_txt_ch)
