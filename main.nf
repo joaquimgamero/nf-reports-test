@@ -28,14 +28,13 @@ process MULTIQC {
 }
 
 workflow REPORTS {
-    take:
-    val step from step_ch
-
     main:
-    multiqc_html_ch.collect().set{ resources_ch }
+    step_ch.into { steps_for_multiqc }
+    multiqc_html_ch.into { resources_ch }
+
     resources_ch.view()
 
-    MULTIQC(step)
+    MULTIQC(steps_for_multiqc)
 
     emit:
     val reports from reports.collect()
