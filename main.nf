@@ -13,7 +13,7 @@ process MULTIQC {
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
-    path multiqc_html from multiqc_html_ch
+    path multiqc_html from multiqc_html_ch.first()
     val step from step_ch
 
     output:
@@ -28,13 +28,9 @@ process MULTIQC {
 }
 
 workflow REPORTS {
+
     main:
-    step_ch.into { steps_for_multiqc }
-    multiqc_html_ch.into { resources_ch }
-
-    resources_ch.view()
-
-    MULTIQC(steps_for_multiqc)
+    MULTIQC()
 
     emit:
     val reports from reports.collect()
