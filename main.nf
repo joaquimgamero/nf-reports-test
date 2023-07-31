@@ -13,8 +13,8 @@ process MULTIQC {
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
-    path(multiqc_html) from multiqc_html_ch
-    val(step) from step_ch
+    path multiqc_html from multiqc_html_ch
+    val step from step_ch
 
     output:
     path("step_*/*.html") into reports
@@ -29,7 +29,19 @@ process MULTIQC {
 
 workflow REPORTS {
     take:
-    val multiqc_reports from reports.collect()
+    val step from step_ch
+
+    main:
+    multiqc_html_ch.collect().set{ resources_ch }
+    resources_ch.view()
+
+    MULTIQC(step)
+
+    emit:
+    val reports from reports.collect()
+}
+
+workflow {
     path bin_depths_summary_tsv from Channel.of("${projectDir}/resources/bin_depths_summary.tsv")
     path bin_summary_tsv from Channel.of("${projectDir}/resources/bin_summary.tsv")
     path CAPES_S7_log from Channel.of("${projectDir}/resources/CAPES_S7.log")
@@ -63,52 +75,5 @@ workflow REPORTS {
     path report_pdf from Channel.of("${projectDir}/resources/report.pdf")
     path samplesheet_csv from Channel.of("${projectDir}/resources/nfcore_chipseq110_samplesheet_test_full_6cols.csv")
 
-    main:
-    """
-    echo "Sleeping ${params.delay} seconds"
-    sleep ${params.delay}
-    echo "Copying all resource files to results directory for testing!"
-    """
-
-    emit:
-    tuple bin_depths_summary_tsv,
-        bin_summary_tsv,
-        CAPES_S7_log,
-        execution_trace_txt,
-        kraken2_report_txt,
-        pipeline_dag_svg,
-        binDepths_png,
-        krona_html,
-        transposed_tex,
-        transposed_tsv,
-        transposed_txt,
-        genome_fasta,
-        all_sites_fas,
-        baits_bed,
-        genome_dict,
-        genome_fasta_fai,
-        genome_gff3,
-        genome_gtf,
-        genome_sizes,
-        proteome_fasta,
-        test_baserecalibrator_table,
-        test_bed,
-        test_bedgraph,
-        test_bigwig,
-        test_paired_end_bam,
-        test_single_end_bam_readlist_txt,
-        test_vcf,
-        test_vcf_gz_tbi,
-        test2_targets_tsv_gz,
-        transcriptome_paf,
-        report_pdf,
-        samplesheet_csv
+    REPORTS()
 }
-
-
-
-
-
-
-
-
