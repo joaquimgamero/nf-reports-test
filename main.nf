@@ -2,7 +2,7 @@ params.outdir = "results"
 params.delay = 300
 
 // Channels
-Channel.from(1..4).set { steps_ch }
+Channel.from(1..4).map{ [it, 'step_number'] }.set { steps_ch }
 Channel.value("${projectDir}/resources/MultiQC Report.html").set { multiqc_html_ch }
 Channel.of("${projectDir}/resources/bin_depths_summary.tsv").set { bin_depths_summary_tsv_ch }
 Channel.of("${projectDir}/resources/bin_summary.tsv").set { bin_summary_tsv_ch }
@@ -41,8 +41,8 @@ process MULTIQC {
     publishDir "${params.outdir}", mode: 'copy'
 
     input:
-    path multiqc_html
     val step
+    path multiqc_html
 
     output:
     path("step_*/*.html"), emit: reports
